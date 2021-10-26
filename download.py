@@ -16,11 +16,14 @@ from bs4 import BeautifulSoup
 
 
 class DataDownloader:
-    """ TODO: dokumentacni retezce 
+    """ 
+    Class for downloading and parsing data
 
     Attributes:
         headers    Nazvy hlavicek jednotlivych CSV souboru, tyto nazvy nemente!  
         regions     Dictionary s nazvy kraju : nazev csv souboru
+        headers_type Array type for headers
+        cache       Cache attribute
     """
 
     headers = ["p1", "p36", "p37", "p2a", "weekday(p2a)", "p2b", "p6", "p7", "p8", "p9", "p10", "p11", "p12", "p13a",
@@ -56,6 +59,14 @@ class DataDownloader:
     cache = {}
 
     def __init__(self, url="https://ehw.fit.vutbr.cz/izv/", folder="data", cache_filename="data_{}.pkl.gz"):
+        """
+            Initialize class
+
+            Arguments:
+                url     Url where data can be downloaded
+                folder  Folder where to store downloaded data
+                cache_filename  Name of cache file 
+        """
         self.url = url
         self.folder = folder
         self.cache_filename = cache_filename
@@ -63,6 +74,9 @@ class DataDownloader:
             os.mkdir(self.folder)
 
     def download_data(self):
+        """
+            Download data from url
+        """
         s = requests.session()
         response = s.get(self.url)
         soup = BeautifulSoup(response.text, 'html.parser')
@@ -78,12 +92,22 @@ class DataDownloader:
             filename = link.split('/')[-1]
             if filename not in os.listdir(f"./{self.folder}"):
                 with open(f"./{self.folder}/{filename}", 'wb') as fp:
-                    with requests.get(link, stream = True) as r:
+                    with requests.get(link, stream=True) as r:
                         for chunk in r.iter_content(chunk_size=128, decode_unicode=True):
                             fp.write(chunk)
 
 
     def parse_region_data(self, region):
+        """
+            Parse region data from given region
+
+            Attribute:
+                region Region to be parsed
+
+            Return:
+                Function return dictionary, where keys are headers and values are numpy
+                arrays with data
+        """
         self.download_data()
         
         archives = []
@@ -97,40 +121,50 @@ class DataDownloader:
                 for file in zf.namelist():
                     if self.regions[region] == file.split('.csv')[0]:
                         with zf.open(file, 'r') as csvfile:
-                            reader = csv.reader(io.TextIOWrapper(csvfile, 'cp1250'), delimiter = ';')
-                            foo = np.array(list(reader), dtype = 'U23')
+                            reader = csv.reader(io.TextIOWrapper(csvfile, 'cp1250'), delimiter=';')
+                            foo = np.array(list(reader))
                             
                         array = np.concatenate((array, foo))
         array = np.insert(array, 0, region, axis=1)
-        array = np.transpose(array)
+        array = np.transpose(array) 
 
-        letters = ['A:', 'B:', 'D:', 'E:', 'F:', 'G:', 'H:', 'J:']
         for index, arr in enumerate(array):
-            for index_in, elem in enumerate(arr):
-                tmp = [ext for ext in letters if ext in elem]
-                if tmp != []:
-                    for letter in tmp:
+           for index_in, elem in enumerate(arr):
+                letters = re.findall(r"[A-G]:", elem)
+                if letters != []:
+                    for letter in letters:
                         elem = elem.replace(letter, '')
                 if ',' in elem:
                     elem = elem.replace(',', '.')
                 if elem == '':
                     elem = -1
                 arr[index_in] = elem
+
         result = {self.headers[x] : array[x + 1] for x, value in enumerate(self.headers)}
         result[region] = array[0]
-
         
         for index, header in enumerate(self.headers):
-            if self.headers_types[index] != np.str_:
-                try:
-                    result[header] = result[header].astype(self.headers_types[index])
-                except ValueError:
-                    pass
-        
+            try:
+                result[header] = result[header].astype(self.headers_types[index])
+            except ValueError:
+                pass
 
         return result
 
     def get_dict(self, regions=None):
+        """
+            Get cached files or call parse_region_data and cache it in cache_filename
+
+            Arguments:
+                regions From which regions to get data (must be a list)
+
+            Return:
+                Function return dictionary where headers are keys and values are numpy 
+                arrays with data
+        """
+        result = {self.headers[x] : np.empty(0, dtype=self.headers_types[x]) for x, value in enumerate(self.headers)}
+        result['region'] = np.empty(0, dtype='U50')
+
         if regions is None:
             regions = self.regions.keys()
         for region in regions:
@@ -140,14 +174,25 @@ class DataDownloader:
                 with gzip.open(f'./{self.folder}/{self.cache_filename.format(region)}', 'rb') as cache_file:
                     stats = pickle.load(cache_file)
                 self.cache[region] = stats
-                
             else:
                 stats = self.parse_region_data(region)
-                with gzip.open(f'./{self.folder}/{self.cache_filename.format(region)}', 'wb') as cache_file:
+                with gzip.open(f'./{self.folder}/{self.cache_filename.format(region)}', 'wb', compresslevel=5) as cache_file:
                     pickle.dump(stats, cache_file)
 
+            for header in self.headers:
+                result[header] = np.concatenate((result[header], stats[header]))
 
-# TODO vypsat zakladni informace pri spusteni python3 download.py (ne pri importu modulu)
+            result['region'] = np.concatenate((result['region'], stats[region]))
+
+        return result
+
+
 if __name__ == '__main__':
-    regions = DataDownloader().regions
-    DataDownloader().get_dict()
+    data = DataDownloader().get_dict(['PHA', 'STC', 'JHC'])
+    print("Regions: PHA, STC, JHC")
+    print("Number of entries: " + str(len(data['region'])))
+    print("Columns:")
+    for key in data.keys():
+        if key == 'region':
+            continue
+        print(key)
