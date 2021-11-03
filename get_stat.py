@@ -25,12 +25,12 @@ def plot_stat(data_source, fig_location=None, show_figure=False):
         indx = np.where(data_source['region'] == region)
         none = np.sum(data_source['p24'][indx] == 0)
         yellow = np.sum(data_source['p24'][indx] == 1)
-        mimo_provoz = np.sum(data_source['p24'][indx] == 2)
-        znacky = np.sum(data_source['p24'][indx] == 3)
-        prenosne_znacky = np.sum(data_source['p24'][indx] == 4)
-        pravidla = np.sum(data_source['p24'][indx] == 5)
+        out_order = np.sum(data_source['p24'][indx] == 2)
+        sign = np.sum(data_source['p24'][indx] == 3)
+        sign_transport = np.sum(data_source['p24'][indx] == 4)
+        rules = np.sum(data_source['p24'][indx] == 5)
 
-        reg_dict[region] = np.array([yellow, mimo_provoz, znacky, prenosne_znacky, pravidla, none])
+        reg_dict[region] = np.array([yellow, out_order, sign, sign_transport, rules, none])
 
     plot_regions = ['HKK', 'JHC', 'JHM', 'KVK', 'LBK', 'MSK', 'OLK', 'PAK', 'PHA', 'PLK', 'STC', 'ULK', 'VYS', 'ZLK']
     plot_yaxis = ['Preřušovana žluta', 'Semafor mimo provoz', 'Dopravními značky', 'Přenosné dopravní značky', 'Nevyznačena', 'Žádná úprava']
