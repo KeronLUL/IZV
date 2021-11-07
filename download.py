@@ -115,7 +115,7 @@ class DataDownloader:
             if re.match(r"^.*\.zip", f) is not None:
                 archives.append(f)
 
-        array = np.empty((0, 64))
+        array = np.zeros((0, 64))
         for archiv in archives:
             with zipfile.ZipFile(f"./{self.folder}/{archiv}", 'r') as zf:
                 for file in zf.namelist():
@@ -162,8 +162,8 @@ class DataDownloader:
                 Function return dictionary where headers are keys and values are numpy 
                 arrays with data
         """
-        result = {self.headers[x] : np.empty(0, dtype=self.headers_types[x]) for x, value in enumerate(self.headers)}
-        result['region'] = np.empty(0, dtype='U50')
+        result = {self.headers[x] : np.zeros(0, dtype=self.headers_types[x]) for x, value in enumerate(self.headers)}
+        result['region'] = np.zeros(0, dtype='U50')
 
         if regions is None:
             regions = self.regions.keys()

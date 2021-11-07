@@ -35,7 +35,7 @@ def plot_stat(data_source, fig_location=None, show_figure=False):
     plot_regions = ['HKK', 'JHC', 'JHM', 'KVK', 'LBK', 'MSK', 'OLK', 'PAK', 'PHA', 'PLK', 'STC', 'ULK', 'VYS', 'ZLK']
     plot_yaxis = ['Preřušovana žluta', 'Semafor mimo provoz', 'Dopravními značky', 'Přenosné dopravní značky', 'Nevyznačena', 'Žádná úprava']
      
-    array = np.empty((14, 6))
+    array = np.zeros((14, 6))
     for indx, region in enumerate(plot_regions):
         array[indx] = reg_dict[region]
 
