@@ -32,7 +32,8 @@ def plot_stat(data_source, fig_location=None, show_figure=False):
 
         reg_dict[region] = np.array([yellow, out_order, sign, sign_transport, rules, none])
 
-    plot_regions = ['HKK', 'JHC', 'JHM', 'KVK', 'LBK', 'MSK', 'OLK', 'PAK', 'PHA', 'PLK', 'STC', 'ULK', 'VYS', 'ZLK']
+    plot_regions = list(DataDownloader().regions.keys())
+    plot_regions.sort()
     plot_yaxis = ['Preřušovana žluta', 'Semafor mimo provoz', 'Dopravními značky', 'Přenosné dopravní značky', 'Nevyznačena', 'Žádná úprava']
      
     array = np.zeros((14, 6))
