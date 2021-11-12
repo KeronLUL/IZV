@@ -53,7 +53,7 @@ def plot_stat(data_source, fig_location=None, show_figure=False):
     im1 = ax1.imshow(array, norm=LogNorm())
     im2 = ax2.imshow(relative, norm=Normalize(r_min, r_max), cmap='plasma')
 
-    cbar1 = fig.colorbar(im1, ax=ax1)
+    cbar1 = fig.colorbar(im1, ax=ax1, fraction=0.046, pad=0.04)
     cbar1.set_label('Počet nehod')
     ax1.set_xticks(np.arange(len(plot_regions)))
     ax1.set_yticks(np.arange(len(plot_yaxis)))
@@ -61,7 +61,7 @@ def plot_stat(data_source, fig_location=None, show_figure=False):
     ax1.set_yticklabels(plot_yaxis)
     ax1.set_title('Absolutně')
 
-    cbar2 = fig.colorbar(im2, ax=ax2)
+    cbar2 = fig.colorbar(im2, ax=ax2, fraction=0.046, pad=0.04)
     cbar2.set_label('Podíl nehod pro danou příčinu [%]') 
     ax2.set_xticks(np.arange(len(plot_regions)))
     ax2.set_yticks(np.arange(len(plot_yaxis)))
