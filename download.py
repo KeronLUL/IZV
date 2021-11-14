@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+"""
+IZV project part 1
+Author: Karel Norek, xnorek01
+"""
 # -*- coding: utf-8 -*-
 import numpy as np
 import requests
