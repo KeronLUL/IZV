@@ -11,13 +11,13 @@ from download import DataDownloader
 
 
 def plot_stat(data_source, fig_location=None, show_figure=False):
-    """ 
-        Generate figures form given data set
+    """
+    Generate figures form given data set
 
-        Arguments:
-            data_source     Data source
-            fig_location    If set save figure in that location
-            show_figure     If set, show figure
+    Arguments:
+        data_source     Data source
+        fig_location    If set save figure in that location
+        show_figure     If set, show figure
     """
     regions = data_source['region']
     reg_dict = {}
@@ -35,20 +35,20 @@ def plot_stat(data_source, fig_location=None, show_figure=False):
     plot_regions = list(DataDownloader().regions.keys())
     plot_regions.sort()
     plot_yaxis = ['Preřušovana žluta', 'Semafor mimo provoz', 'Dopravními značky', 'Přenosné dopravní značky', 'Nevyznačena', 'Žádná úprava']
-     
+
     array = np.zeros((14, 6))
     for indx, region in enumerate(plot_regions):
         array[indx] = reg_dict[region]
 
-    relative = 100* (array / np.sum(array, axis=0))
+    relative = 100 * (array / np.sum(array, axis=0))
     relative = np.transpose(relative)
-    r_max =relative.max()
+    r_max = relative.max()
     r_min = relative.min()
     relative[relative == 0.0] = np.nan
 
     array = np.transpose(array)
     array[array == 0] = np.nan
-    
+
     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(8, 6))
     im1 = ax1.imshow(array, norm=LogNorm())
     im2 = ax2.imshow(relative, norm=Normalize(r_min, r_max), cmap='plasma')
@@ -62,7 +62,7 @@ def plot_stat(data_source, fig_location=None, show_figure=False):
     ax1.set_title('Absolutně')
 
     cbar2 = fig.colorbar(im2, ax=ax2, fraction=0.046, pad=0.04)
-    cbar2.set_label('Podíl nehod pro danou příčinu [%]') 
+    cbar2.set_label('Podíl nehod pro danou příčinu [%]')
     ax2.set_xticks(np.arange(len(plot_regions)))
     ax2.set_yticks(np.arange(len(plot_yaxis)))
     ax2.set_xticklabels(plot_regions)
