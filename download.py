@@ -31,13 +31,14 @@ class DataDownloader:
                "p34", "p35", "p39", "p44", "p45a", "p47", "p48a", "p49", "p50a", "p50b", "p51", "p52", "p53", "p55a",
                "p57", "p58", "a", "b", "d", "e", "f", "g", "h", "i", "j", "k", "l", "n", "o", "p", "q", "r", "s", "t", "p5a"]
 
-    headers_types = [np.str_, np.int8, np.int8, np.datetime64, np.int8, np.str_, np.int8, np.int8, np.int8, np.int8,
-                    np.int8, np.int8, np.int16, np.int8, np.int8, np.int8, np.int16, np.int8, np.int8, np.int32, 
-                    np.int8, np.int8, np.int8, np.int8, np.int8, np.int8, np.int8, np.int8, np.int8, np.int8, 
-                    np.int8, np.int8, np.int8, np.int8, np.str_, np.int8, np.int8, np.int8, np.int8, np.int8, 
-                    np.int8, np.int16, np.int8, np.int8, np.int8, np.float64, np.float64, np.float64, np.float64, 
-                    np.float64, np.float64, np.str_, np.str_, np.str_, np.str_, np.str_, np.int32, np.str_, np.str_, 
-                    np.str_, np.int32, np.int32, np.str_, np.int8, np.str_]
+    headers_types = [
+        np.str_, np.int8, np.int8, np.datetime64, np.int8, np.str_, np.int8, np.int8, np.int8, np.int8,
+        np.int8, np.int8, np.int16, np.int8, np.int8, np.int8, np.int16, np.int8, np.int8, np.int32,
+        np.int8, np.int8, np.int8, np.int8, np.int8, np.int8, np.int8, np.int8, np.int8, np.int8,
+        np.int8, np.int8, np.int8, np.int8, np.str_, np.int8, np.int8, np.int8, np.int8, np.int8,
+        np.int8, np.int16, np.int8, np.int8, np.int8, np.float64, np.float64, np.float64, np.float64,
+        np.float64, np.float64, np.str_, np.str_, np.str_, np.str_, np.str_, np.int32, np.str_, np.str_,
+        np.str_, np.int32, np.int32, np.str_, np.int8, np.str_]
 
     regions = {
         "PHA": "00",
@@ -103,8 +104,8 @@ class DataDownloader:
             region Region to be parsed
 
         Return:
-            Function return dictionary, where keys are headers and values are numpy
-            arrays with data
+            Function return dictionary, where keys are headers
+            and values are numpy arrays with data
         """
         self.download_data()
 
