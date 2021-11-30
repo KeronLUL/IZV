@@ -32,7 +32,6 @@ road_types = {
     1: "Dvoupruhová",
     2: "Třípruhová",
     3: "Čtyřpruhová",
-    4: "Čtyřpruhová",
     5: "Vícepruhová",
     6: "Rychlostní komunikace"
 }
@@ -223,7 +222,7 @@ def plot_conditions(df: pd.DataFrame, fig_location: str = None,
 
 
 if __name__ == "__main__":
-    df = get_dataframe("accidents.pkl.gz", True)
+    df = get_dataframe("accidents.pkl.gz", False)
     plot_roadtype(df, fig_location="01_roadtype.png", show_figure=False)
     plot_animals(df, "02_animals.png", False)
     plot_conditions(df, "03_conditions.png", False)
