@@ -100,7 +100,7 @@ def plot_roadtype(df: pd.DataFrame, fig_location: str = None,
     df_type = df[df['region'].isin(
                 ['JHC', 'JHM', 'HKK', 'KVK'])][['region', 'p21']]
     df_type['tmp'] = 1
-    df_type.loc[df_type['p21'] == 4] = 3
+    df_type.loc[df_type['p21'] == 4, 'p21'] = 3
     df_type = df_type.groupby(['region', 'p21']).agg('sum').reset_index()
     df_type = df_type.sort_values(by=['p21'])
     df_type['p21'] = df_type['p21'].map(road_types)
