@@ -157,7 +157,7 @@ def plot_animals(df: pd.DataFrame, fig_location: str = None,
     sns.set_palette(["#52006A", "#FF7600", "#CD113B"])
     g = sns.catplot(x="date", y='tmp', data=df_animals, col="region",
                     kind="bar", col_wrap=2, height=3, aspect=1.5,
-                    ci=None, hue="p10", sharex=False, sharey=True)
+                    ci=None, hue="p10", sharex=False, sharey=False)
     (g.set_titles("Kraj: {col_name}")
         .set_axis_labels("Měsíc", "Počet nehod")
         .fig.suptitle('Zavinění nehod', weight="bold"))
