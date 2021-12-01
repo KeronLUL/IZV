@@ -74,8 +74,10 @@ def get_dataframe(filename: str, verbose: bool = False) -> pd.DataFrame:
         print(f"orig_size={df.memory_usage(deep=True).sum() / 1048576:.1f} MB")
 
     for column in df:
-        if df[column].dtype == 'int64' or df[column].dtype == 'float64':
+        if df[column].dtype == 'int64':
             df[column] = pd.to_numeric(df[column], downcast='signed')
+        elif df[column].dtype == 'float64':
+            df[column] = pd.to_numeric(df[column], downcast='float')
         elif column != 'region' and column != 'p2a':
             df[column] = df[column].astype('category')
 
