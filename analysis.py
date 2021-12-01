@@ -74,7 +74,9 @@ def get_dataframe(filename: str, verbose: bool = False) -> pd.DataFrame:
         print(f"orig_size={df.memory_usage(deep=True).sum() / 1048576:.1f} MB")
 
     for column in df:
-        if column != 'region' and column != 'p2a':
+        if df[column].dtype == 'int64' or df[column].dtype == 'float64':
+            df[column] = pd.to_numeric(df[column], downcast='signed')
+        elif column != 'region' and column != 'p2a':
             df[column] = df[column].astype('category')
 
     df['p2a'] = pd.to_datetime(df['p2a'])
@@ -194,8 +196,8 @@ def plot_conditions(df: pd.DataFrame, fig_location: str = None,
     df_w = df_w.pivot_table(columns='p18', values='tmp', aggfunc='sum',
                             index=['date', 'region']).reset_index()
     df_w = df_w.fillna(0)
-    df_w = df_w.groupby([pd.Grouper(key='date', freq='M'),
-                        'region']).agg('sum').reset_index()
+    df_w = (df_w.groupby(['region']).resample('M', on='date').sum().
+            reset_index())
     df_w = df_w.melt(id_vars=["region", 'date'],
                      var_name="p18", value_name="value")
 
@@ -222,7 +224,7 @@ def plot_conditions(df: pd.DataFrame, fig_location: str = None,
 
 
 if __name__ == "__main__":
-    df = get_dataframe("accidents.pkl.gz", False)
+    df = get_dataframe("accidents.pkl.gz", True)
     plot_roadtype(df, fig_location="01_roadtype.png", show_figure=False)
     plot_animals(df, "02_animals.png", False)
     plot_conditions(df, "03_conditions.png", False)
