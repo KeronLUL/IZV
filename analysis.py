@@ -57,6 +57,8 @@ weather = {
     7: "Nárazový vítr"
 }
 
+regions = ['JHC', 'JHM', 'HKK', 'KVK']
+
 
 def get_dataframe(filename: str, verbose: bool = False) -> pd.DataFrame:
     """
@@ -102,7 +104,7 @@ def plot_roadtype(df: pd.DataFrame, fig_location: str = None,
         show_figure - show figure if True
     """
     df_type = df[df['region'].isin(
-                ['JHC', 'JHM', 'HKK', 'KVK'])][['region', 'p21']]
+                regions)][['region', 'p21']]
     df_type['tmp'] = 1
     df_type.loc[df_type['p21'] == 4, 'p21'] = 3
     df_type = df_type.groupby(['region', 'p21']).agg('sum').reset_index()
@@ -114,7 +116,7 @@ def plot_roadtype(df: pd.DataFrame, fig_location: str = None,
 
     g = sns.catplot(x="region", y="tmp", data=df_type, col="p21", kind="bar",
                     col_wrap=3, height=3.5, aspect=1, ci=None, sharex=False,
-                    sharey=False, order=['JHC', 'JHM', 'HKK', 'KVK'])
+                    sharey=False, order=regions)
     (g.set_titles("{col_name}")
         .set_axis_labels("Kraj", "Počet nehod")
         .fig.suptitle('Druh komunikace', weight="bold"))
@@ -147,7 +149,7 @@ def plot_animals(df: pd.DataFrame, fig_location: str = None,
     """
     df_animals = df[df['p58'] == 5]
     df_animals = df_animals[df_animals['region'].isin(
-                    ['JHC', 'JHM', 'HKK', 'KVK'])][['region', 'p10', 'date']]
+                    regions)][['region', 'p10', 'date']]
     df_animals = df_animals[
                 (df_animals['date'] >= pd.to_datetime('2016-1-1'))
                 & (df_animals['date'] <= pd.to_datetime('2020-12-31'))]
@@ -187,7 +189,7 @@ def plot_conditions(df: pd.DataFrame, fig_location: str = None,
         show_figure - show figure if True
     """
     df_w = df[df['region'].isin(
-            ['JHC', 'JHM', 'HKK', 'KVK'])][['region', 'p18', 'date']]
+            regions)][['region', 'p18', 'date']]
     df_w = df_w[
             (df_w['date'] >= pd.to_datetime('2016-1-1'))
             & (df_w['date'] <= pd.to_datetime('2020-12-31'))]
