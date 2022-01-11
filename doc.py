@@ -4,6 +4,7 @@ from matplotlib import pyplot as plt
 import pandas as pd
 import seaborn as sns
 import numpy as np
+import math
 
 road_types = {
     0: "Žádná z uvedených",
@@ -52,6 +53,7 @@ def print_police_stats(df: pd.DataFrame):
     df = df.sort_values(by='tmp').reset_index()
     print(f"Lowest number of accidents involving police: {df.iloc[0]['tmp']} in region {df.iloc[0]['region']}")
     print(f"Highest number of accidents involving police: {df.iloc[-1]['tmp']} in region {df.iloc[-1]['region']}")
+    print(f"Mean: {math.ceil(df['tmp'].mean())}")
 
 
 def print_table(df: pd.DataFrame):
