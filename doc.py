@@ -109,4 +109,4 @@ if __name__ == "__main__":
     df = get_df()
     print_police_stats(df)
     print_table(df)
-    police_plot(df, 'police.png')
+    police_plot(df, 'fig.png')
